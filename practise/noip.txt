@@ -1,0 +1,758 @@
+第 23 题
+看程序写结果：
+
+#include<stdio.h>
+int main()
+{
+	int i, p[5], a, b, c, x, y = 20;
+	for ( i = 0; i <= 4; i++ )
+		scanf( "%d", &p[i] );
+	a = (p[0] + p[1]) + (p[2] + p[3] + p[4]) / 7;
+	b = p[0] + p[1] / ( (p[2] + p[3]) / p[4]);
+	c = p[0] * p[1] / p[2];
+	x = a + b - p[(p[3] + 3) % 4];
+	if ( x > 10 )
+		y += (b * 100 - a) / (p[p[4] % 3] * 5);
+	else
+		y += 20 + (b * 100 - c) / (p[p[4] % 3] * 5);
+	printf( "%d,%d\n", x, y );
+	return(0);
+}
+{注：本例中，给定的输入数据可以避免分母为0或数组元素下表越界。} 输入：6 6 5 5 3
+
+
+本题共 8 分
+第 24 题
+看程序写结果：
+
+#include<stdio.h>
+void fun( int *a, int *b )
+{
+	int *k;
+	k = a; a = b; b = k;
+}
+
+
+main()
+{
+	int a = 3, b = 6, *x = &a, *y = &b;
+	fun( x, y );
+	printf( "%d,%d ", a, b );
+}
+输出：_______________________________
+
+
+本题共 8 分
+第 25 题
+看程序写结果：
+
+#include "math.h"
+#include "stdio.h"
+main()
+{
+	int a1[51] = { 0 };
+	int i, j, t, t2, n = 50;
+	for ( i = 2; i <= sqrt( n ); i++ )
+		if ( a1[i] == 0 )
+		{
+			t2 = n / i;
+			for ( j = 2; j <= t2; j++ )
+				a1[i * j] = 1;
+		}
+	t = 0;
+	for ( i = 2; i <= n; i++ )
+		if ( a1[i] == 0 )
+		{
+			printf( "%4d", i ); t++;
+			if ( t % 10 == 0 )
+				printf( "\n" );
+		}
+	printf( "\n" );
+}
+
+本题共 8 分
+第 26 题
+看程序写结果：
+
+#include "ctype.h"
+#include "stdio.h"
+void expand( char s1[], char s2[] )
+{
+	int i, j, a, b, c;
+	j = 0;
+	for ( i = 0; (c = s1[i]) != '\0'; i++ )
+		if ( c == '-' )
+		{
+			a = s1[i - 1]; b = s1[i + 1];
+			if ( isalpha( a ) && isalpha( b ) || isdigit( a ) && isdigit( b ) )
+/*函数isalpha(a)用于判断字符a是否为字母,isdigit(b) 用于判断字符b是否为数字,如果是,返回1,否则返回0 */
+			{
+				j--;
+				do
+					s2[j++] = a++;
+				while ( tolower( a ) < tolower( s1[i + 1] ) );
+			}
+/*函数tolower(a)的功能是当字符a是大写字母,改为小写,其余情况不变*/
+			else s2[j++] = c;
+		}else s2[j++] = c;
+	s2[j] = '\0';
+}
+
+
+main()
+{
+	char s1[100], s2[300];
+	printf( "input s1:" );
+	gets( s1 );
+	expand( s1, s2 );
+	printf( "%s\n", s2 );
+}
+输入：wer2345d-h454-82qqq
+
+
+本题共 8 分
+第 27 题
+完善程序:
+（求字符的逆序）下面的程序的功能是输入若干行字符串，每输入一行，就按逆序输出该行，最后键入-1终止程序。请将程序补充完整。
+
+#include <iostream.h>
+#include <string.h>
+int maxline = 200, kz;
+int reverse( char s[] )
+{
+	int i, j, t;
+	for ( i = 0, j = strlen( s ) - 1; i < j; 【①】 , 【②】 )
+	{
+		t = s[i]; s[i] = s[j]; s[j] = t;
+	}
+	return(0);
+}
+
+
+void main()
+{
+	char line[100];
+	cout << "continue? -1 for end." <<endl;
+	cin>>kz;
+	while(【③】)
+	{
+		cin  >>  line;
+		【④】;
+		cout << line  <<  endl;
+		cout << "continue ? -1 for end." << endl;
+		cin >> kz;
+	}
+}
+1.
+2.
+3.
+4.
+
+本题共 8 分
+第 28 题
+完善程序：
+（棋盘覆盖问题）在一个2^k\times 2^k2 
+k
+ ×2 
+k
+ 个方格组成的棋盘中恰有一个方格与其它方格不同（图中标记为-1的方格），称之为特殊方格。现用L型（占3个小方格）纸片覆盖棋盘上除特殊方格的所有部分，各纸片不得重叠，于是，用到的纸片数恰好是(4^k-1)/3(4 
+k
+ −1)/3。在下表给出的一个覆盖方案中，k=2，相同的3各数字构成一个纸片。下面给出的程序使用分治法设计的，将棋盘一分为四，依次处理左上角、右上角、左下角、右下角，递归进行。请将程序补充完整。
+
+2  2  3  3
+2 -1  1  3
+4  1  1  5
+4  4  5  5
+#include <iostream.h>
+#include <iomanip.h>
+int board[65][65], tile; /* tile为纸片编号 */
+void chessboard( int tr, int tc, int dr, int dc, int size )
+/* dr,dc依次为特殊方格的行、列号 */
+{
+	int t, s;
+	if ( size == 1 )
+		⑤ ；
+		t = tile++;
+	s = size / 2;
+	if ( ⑥ )
+		chessboard( tr, tc, dr, dc, s );
+	else{
+		board[tr + s -1][tc + s -1] = t;
+		[⑦];
+	}
+	if ( dr < tr + s && dc >= tc + s )
+		chessboard( tr, tc + s, dr, dc, s );
+	else{
+		board[tr + s -1][tc + s] = t;
+		⑧;
+	}
+	if ( dr >= tr + s && dc < tc + s )
+		chessboard( tr + s, tc, dr, dc, s );
+	else{
+		board[tr + s][tc + s -1] = t;
+		[⑨];
+	}
+	if ( dr >= tr + s && dc >= tc + s )
+		chessboard( tr + s, tc + s, dr, dc, s );
+	else{ board[tr + s][tc + s] = t;
+	      [⑩]; }
+}
+
+
+void prtl( int b[][65], int n )
+{
+	int i, j;
+	for ( i =1; i <= n; i++ )
+	{
+		for ( j =1; j <= n; j++ )
+			cout << setw( 3 ) << b[i][j];
+		cout << endl;
+	}
+}
+
+
+void main()
+{
+	int size, dr, dc;
+	cout << "input size(4/8/16/64):" << endl;
+	cin >> size;
+	cout << "input the position of special block(x,y):" << endl;
+	cin >> dr >> dc;
+	board[dr][dc] = -1;
+	tile++;
+	chessboard( 1, 1, dr, dc, size );
+	prtl( board, size );
+}
+1.
+2.
+3.
+4.
+5.
+6.
+
+
+noip2008
+第 23 题
+阅读程序写结果:
+
+#include<iostream>
+using namespace std;
+int main()
+{
+	int i, a, b, c, d, f[4];
+	for(i = 0; i < 4; i++) cin >> f[i];
+	a = f[0] + f[1] + f[2] + f[3];
+	a = a / f[0];
+	b = f[0] + f[2] + f[3];
+	b = b / a;
+	c = (b * f[1] + a) / f[2];
+	d = f[(b / c ) % 4];
+	if(f[(a + b + c + d) % 4] > f[2])
+		cout << a + b<< endl;
+	else 
+		cout << c + d << endl;
+	return 0;
+}
+输入：9 19 29 39
+
+
+本题共 8 分
+第 24 题
+阅读程序写结果:
+
+#include<iostream>
+using namespace std;
+void foo(int a, int b, int c)
+{
+	if(a > b) 
+		foo(c, a, b);
+	else
+		cout<<a<<','<<b<<','<<c<<endl;
+}
+int main()
+{
+	int a, b, c;
+	cin >> a >> b >> c;
+	foo(a, b, c);
+	return 0;
+}
+输入: 3 1 2
+
+
+本题共 8 分
+第 25 题
+阅读程序写结果:
+
+#include <iostream>
+using namespace std;
+
+void func(int ary[], int n )
+{
+	int i=0, j, x;
+	j=n-1;
+	while(i<j)
+	{
+		while (i<j&&ary[i]>0) i++;
+		while (i<j&&ary[j]<0) j--;
+		if (i<j){
+			x=ary[i];
+			ary[i++]=ary[j];
+			ary[j--]=x;
+		}
+	}
+}
+
+int main()
+{
+	
+	int a[20], i, m;
+	m=10;
+	for(i=0; i<m; i++)
+	{
+		cin>>a[i];
+	}
+	func(a, m);
+	for (i=0; i<m; i++)
+		cout<<a[i]<<" ";
+	cout<< endl;
+	return 0;
+}
+输入：5 4 -6 -11 6 -59 22 -6 1 10
+
+
+本题共 8 分
+第 26 题
+阅读程序写结果:
+
+#include<iostream>
+#include<cstring>
+using namespace std;
+
+#define MAX 100
+void solve(char first[], int spos_f, int epos_f, char mid[], int spos_m, int epos_m)
+{
+	int i, root_m;
+	if(spos_f > epos_f)
+		return;
+	for(i = spos_m; i <= epos_m; i++)
+		if(first[spos_f] == mid[i])
+		{
+			root_m = i;
+			break;
+		}
+	solve(first, spos_f + 1, spos_f + (root_m - spos_m), mid, spos_m, root_m - 1);
+	solve(first, spos_f + (root_m - spos_m) + 1, epos_f, mid, root_m + 1, epos_m);
+	cout << first[spos_f];
+}
+
+int main()
+{
+	char first[MAX], mid[MAX];
+	int len;
+	cin >> len;
+	cin >> first >> mid;
+	solve(first, 0, len - 1, mid , 0, len - 1);	
+	cout << endl;
+	return 0;
+}
+输入：
+7
+ABDCEGF
+BDAGECF
+
+
+本题共 8 分
+第 27 题
+完善程序：
+（字符串替换）给定一个字符串S（S仅包含大小写字母），下面的程序将S中的每个字母用规定的字母替换，并输出S经过替换后的结果。程序的输入是两个字符串，第一个字符串是给定的字符串S，第二个字符串S’由26个字母组成，它是a-z的任一排列，大小写不定，S’规定了每个字母对应的替换字母：S’中的第一个字母是字母A和a的替换字母，即S中的A用该字母的大写替换，S中的a用该字母的小写替换；S’中的第二个字母是字母B和b的替换字母，即S中的B用该字母的大写替换，S中的b用该字母的小写替换；…… 以此类推。
+
+#include <iostream>
+#include <string.h>
+char change[26], str[5000];
+using namespace std;
+
+void CheckChangeRule()
+{
+    int i;
+    for (i = 0;i < 26;i ++)
+    {
+        if ( [                   ①                   ] )
+               change[i] -= 'A' - 'a';
+    }
+}
+
+void ChangeString()
+{
+    int i;
+    for (i = 0;i <strlen(str);i ++)
+    {
+          if (  [                 ②                    ]  )
+                str[i] = change[str[i] - 'A'] -'a' + 'A';
+          else
+                  [              ③             ]          
+    }
+}
+
+int main()
+{
+		int i;
+cin >> str ;
+    cin >> change;
+    CheckChangeRule();
+    [               ④               ] 
+    cout << str << endl;
+    return 0;
+}
+1.
+2.
+3.
+4.
+
+本题共 8 分
+第 28 题
+完善程序：
+
+(找第k大的数) 给定一个长度为1,000,000的无序正整数序列, 以及另一个数n (1<=n<=1000000), 然后以类似快速排序的方法找到序列中第n大的数（关于第n大的数：例如序列{1，2，3，4，5，6}中第3大的数是4）。
+
+#include <iostream>
+using namespace std;
+
+int a[1000001],n,ans = -1;
+void swap(int &a,int &b)
+{
+    int c;
+    c = a; a = b;    b = c;
+}
+
+int FindKth(int left, int right, int n)
+{
+    int tmp,value,i,j;
+    if (left == right) return left;
+    tmp = rand()% (right - left) + left;
+    swap(a[tmp],a[left]);
+    value =[       ①       ];
+    i = left;
+    j = right;
+    while (i < j)
+    {
+        while (i < j && [       ②       ]) j --;
+        if (i < j) {a[i] = a[j]; i ++;} else break;
+        while (i < j && [       ③     ]) i ++;
+        if (i < j) {a[j] = a[i]; j - -;} else break;
+    }
+    [      ④       ]  
+    if (i < n) return  FindKth([         ⑤        ] );
+    if (i > n) return [         ⑥           ]        
+    return i;
+}
+
+int main()
+{
+    int i;
+    int m = 1000000;
+    for (i = 1;i <= m;i ++)
+        cin >> a[i];
+    cin >> n;
+    ans = FindKth(1,m,n);
+    cout << a[ans];
+    return 0;
+}
+1.
+2.
+3.
+4.
+5.
+6.
+
+
+noip2009
+第 23 题
+阅读程序写结果：
+
+#include <iostream>
+using namespace std;
+
+void swap(int & a, int & b)
+{
+    int t;
+    t = a;
+    a = b;
+    b = t;
+}
+
+int main()
+{
+    int a1, a2, a3, x;
+        
+    cin>>a1>>a2>>a3;
+    if (a1 > a2)
+        swap(a1, a2);
+    if (a2 > a3)
+        swap(a2, a3);
+    if (a1 > a2)
+        swap(a1, a2);
+    
+    cin>>x;
+    if (x < a2)
+        if (x < a1)
+            cout<<x<<' '<<a1<<' '<<a2<<' '<<a3<<endl;
+        else
+            cout<<a1<<' '<<x<<' '<<a2<<' '<<a3<<endl;
+    else
+        if (x < a3)
+            cout<<a1<<' '<<a2<<' '<<x<<' '<<a3<<endl;
+        else
+            cout<<a1<<' '<<a2<<' '<<a3<<' '<<x<<endl;    
+    return 0;
+}
+输入：
+91 2 20
+77
+
+
+本题共 8 分
+第 24 题
+阅读程序写结果：
+
+#include <iostream>
+using namespace std;
+
+int rSum(int j)
+{
+    int sum = 0;
+    while (j != 0) {
+        sum = sum * 10 + (j % 10);
+        j = j / 10;
+    }
+    return sum;
+}
+
+int main()
+{
+    int n, m, i;
+        
+    cin>>n>>m;
+    for (i = n; i < m; i++)
+        if (i == rSum(i))
+            cout<<i<<' ';
+    return 0;
+}
+输入：
+90 120
+
+
+本题共 8 分
+第 25 题
+阅读程序写结果：
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+int main()
+{
+    string s;
+    char m1, m2;
+    int i;
+    
+    getline(cin, s);
+    m1 = ' ';
+    m2 = ' ';
+    for (i = 0; i < s.length(); i++)
+        if (s[i] > m1) {
+            m2 = m1;
+            m1 = s[i];
+        }
+        else if (s[i] > m2)
+            m2 = s[i];
+    cout<<int(m1)<<' '<<int(m2)<<endl;
+    return 0;
+} 
+输入：Expo 2010 Shanghai China 输出：_________
+
+提示：
+
+字符	空格	'0'	'A'	'a'
+ASCII码	32	48	65	97
+
+本题共 8 分
+第 26 题
+阅读程序写结果：
+
+#include <iostream>
+using namespace std;
+
+const int NUM = 5;
+
+int r(int n)
+{
+    int i;
+    if (n <= NUM)
+        return n;
+    for (i = 1; i <= NUM; i++)
+        if (r(n - i) < 0)
+            return i;
+    return -1;
+}
+
+int main()
+{
+    int n;
+        
+    cin>>n;
+    cout<<r(n)<<endl;
+    return 0;
+}
+（1）
+输入：7
+输出：_________（4分）
+
+（2）
+输入：16
+输出：_________（4分）
+
+1.
+2.
+
+本题共 8 分
+第 27 题
+完善程序：
+（哥德巴赫猜想）哥德巴赫猜想是指，任一大于2的偶数都可写成两个质数之和。迄今为止，这仍然是一个著名的世界难题，被誉为数学王冠上的明珠。试编写程序，验证任一大于2且不超过n的偶数都能写成两个质数之和。
+
+#include <iostream>
+using namespace std;
+
+int main()
+{
+    const int SIZE = 1000;
+        
+    int n, r, p[SIZE], i, j, k, ans;
+    bool tmp;
+    
+    cin>>n;
+    r = 1;
+    p[1] = 2;
+    for (i = 3; i <= n; i++) {
+        [    ①    ];
+        for (j = 1; j <= r; j++)
+            if (i % [     ②   ]  == 0) {
+                tmp = false;
+                break;
+            }
+        if (tmp) {
+            r++;
+            [    ③   ] ;
+        }
+    }
+    
+    ans = 0;
+    for (i = 2; i <= n / 2; i++) {
+        tmp = false;
+        for (j = 1; j <= r; j++)
+            for (k = j; k <= r; k++)
+                if (i + i == [     ④   ] ) {
+                    tmp = true;
+                    break;
+                }
+        if (tmp)
+            ans++;
+    }
+    cout<<ans<<endl;
+    return 0;
+}
+若输入n为2010，则输出[ ⑤ ]时表示验证成功，即大于2且不超过2010的偶数都满足哥德巴赫猜想。
+
+1.
+2.
+3.
+4.
+5.
+
+本题共 11 分
+第 28 题
+完善程序：
+**(过河问题）**在一个月黑风高的夜晚，有一群人在河的右岸，想通过唯一的一根独木桥走到河的左岸。在这伸手不见五指的黑夜里，过桥时必须借助灯光来照明，很不幸的是，他们只有一盏灯。另外，独木桥上最多承受两个人同时经过，否则将会坍塌。每个人单独过桥都需要一定的时间，不同的人需要的时间可能不同。两个人一起过桥时，由于只有一盏灯，所以需要的时间是较慢的那个人单独过桥时所花的时间。现输入n（2≤n<100）和这n个人单独过桥时需要的时间，请计算总共最少需要多少时间，他们才能全部到达河的左岸。 例如，有3个人甲、乙、丙，他们单独过桥的时间分别为1、2、4，则总共最少需要的时间为7。具体方法是：甲、乙一起过桥到河的左岸，甲单独回到河的右岸将灯带回，然后甲、丙再一起过桥到河的左岸，总时间为2+1+4=7。
+
+#include <iostream>
+using namespace std;
+
+const int SIZE = 100;
+const int INFINITY = 10000;
+const bool LEFT = true;
+const bool RIGHT = false;
+const bool LEFT_TO_RIGHT = true;
+const bool RIGHT_TO_LEFT = false;
+
+int n, hour[SIZE];
+bool pos[SIZE];
+
+int max(int a, int b)
+{
+    if (a > b)
+        return a;
+    else
+        return b;
+}
+
+int go(bool stage)
+{
+    int i, j, num, tmp, ans;
+    if (stage == RIGHT_TO_LEFT) {
+        num = 0;
+        ans = 0;
+        for (i = 1; i <= n; i++)
+            if (pos[i] == RIGHT) {
+                num++;
+                if (hour[i] > ans)
+                    ans = hour[i];
+            }
+        if ([    ①    ])
+            return ans;
+        ans = INFINITY;
+        for (i = 1; i <= n - 1; i++)
+            if (pos[i] == RIGHT)
+                for (j = i + 1; j <= n; j++)
+                    if (pos[j] == RIGHT) {
+                        pos[i] = LEFT;
+                        pos[j] = LEFT;
+                        tmp = max(hour[i], hour[j]) +[     ②    ];
+                        if (tmp < ans)
+                           ans = tmp;
+                        pos[i] = RIGHT;
+                        pos[j] = RIGHT;
+                    }
+        return ans;
+    }
+    if (stage == LEFT_TO_RIGHT) {
+        ans = INFINITY;
+        for (i = 1; i <= n; i++)
+            if ([    ③    ]) {
+                pos[i] = RIGHT;
+                tmp =[    ④    ];
+                if (tmp < ans)
+                    ans = tmp;
+            [        ⑤    ];
+            }
+        return ans;
+    }
+    return 0;
+}
+
+int main()
+{
+    int i;
+        
+    cin>>n;
+    for (i = 1; i <=n; i++) {
+        cin>>hour[i];
+        pos[i] = RIGHT;
+    }
+    cout<<go(RIGHT_TO_LEFT)<<endl;
+    return 0;
+}
+1.
+2.
+3.
+4.
+5.
+
